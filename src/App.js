@@ -1,14 +1,16 @@
 import React from 'react';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'; 
 import HomePage from './HomePage/homePage';
-import ProductPage from './ProductPage/productPage.jsx'
+import Apply from './Apply/apply.jsx'
 
 function App() {
   return (
     <Router>
         <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/product/" component={ProductPage} />
+          <Route path="/" exact component={HomePage} />
+          <Route path="/donate" exact component={HomePage} />
+          <Route path="/apply" exact component={Apply} />
+          <Route path="/luke-project" exact component={HomePage} />
         </Switch>
     </Router>
   );

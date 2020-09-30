@@ -1,0 +1,4 @@
+export const ABOUT_US_PARAGRAPHS = {
+    main1: "Searching for Solutions is an educational organization committed to empowering local youth with the tools to develop intellectual curiosity and cultural self-confidence. With digital learning initiatives, our platform aims to support children in their discovery of long-term scholastic interests.",
+    main2: "The world today is neither ideal nor fair; However, diverse sources of community education offer us a path towards a more equitable and just world. The values that we know to be essential to the human spirit— education, community, safety, curiosity, independence —are not justly distributed. Our belief is that it should not be an idealized goal, but a realized responsibility to prevent children from struggling under the weight of this injustice."
+}

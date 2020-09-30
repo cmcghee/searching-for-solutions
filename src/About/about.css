@@ -1,16 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Montserrat&display=swap');
 
+.vertical-offset {
+    padding-top: 40px;
+}
+
 .aboutHeader h1{
     text-align: center;
     font-family: 'Comfortaa';
     margin-bottom: 0px;
+    padding-bottom: 20px;
 }
 
 .aboutHeader p{
     text-align: center;
+    font-size: 25px;
     font-family: 'Montserrat', sans-serif;
-    padding-left: 20%;
-    padding-right: 20%;
+    padding-left: 10%;
+    padding-right: 10%;
     margin-bottom: 0px;
 }
 
@@ -19,39 +25,18 @@
 }
 
 .video {
-    max-width: calc(177.778vh);
-    height: calc(56.25vw);
     margin-left: auto;
     margin-right: auto;
     display: block
 }
 
-div.MuiGrid-container {
-    padding-left: 40px;
-    padding-right: 20px;
-}
-
-div.MuiCard-root {
-    width: 300px;
-    height: 600px;
+.gridContainer {
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 div.MuiCardHeader-content {
     font-family: 'Montserrat', sans-serif;
-}
-
-div.MuiCardMedia-root {
-    height:225px;
-}
-
-span.MuiChip-label {
-    font-family: 'Comfortaa';
-    font-weight: bold;
-}
-div.MuiChip-root {
-    padding:0px;
-    margin-top: 16px;
-    width: 40%;
 }
 
 div.MuiChip-root.Hybrid {

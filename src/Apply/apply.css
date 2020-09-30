@@ -1,0 +1,46 @@
+.header h1{
+    text-align: center;
+    font-family: 'Comfortaa';
+    margin-bottom: 0px;
+    padding-bottom: 35px;
+    padding-top: 6rem;
+}
+
+@media screen and (max-width: 770px) {
+    .formContainer {
+        padding-left: 10%;
+        padding-right: 10%;
+    }
+}
+
+@media screen and (min-width: 771px) {
+    .formContainer {
+        padding-left: 30%;
+        padding-right: 30%;
+    }
+}
+div.MuiGrid-root {
+    padding-bottom:20px;
+}
+.buttonContainer {
+    text-align: center;
+    padding-bottom: 40px;
+}
+
+div.MuiSelect-select {
+    min-width: 120px;
+}
+
+.appSection {
+    padding-bottom: 40px;
+}
+
+.appSectionHeader {
+    padding-bottom: 10px;
+    font-family: 'Comfortaa';
+    font-size: 25px;
+}
+
+.textAreaHeader {
+    padding-bottom: 10px;
+}

@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import timelapse from '../MainPage/dctimelapse.mp4';
+import {ABOUT_US_PARAGRAPHS} from './aboutConstants';
 import "./about.css"
+import ResponsivePlayer from '../ReactPlayer/reactPlayer';
+import TeamMembers from '../TeamMembers/teamMembers'
 
 class about extends Component {
     constructor(props) {
@@ -12,30 +14,27 @@ class about extends Component {
     }
 
     renderHeader() {
+        const { main1, main2 } = ABOUT_US_PARAGRAPHS;
+
         return(
-            <div className="aboutHeader">
+            <div className="aboutHeader vertical-offset" name="aboutus">
                 <h1>WHAT WE STAND FOR</h1>
-                <p>As a family, we make thoughtful decisions for our community, customers and planet. We have 5 Core Values that we live by: Be the Best, Deliver on Promises, Be Better Together, Stay Authentic, and Spread Good Vibes. </p>
+                <p>{main1}</p>
+                <p>{main2}</p>
             </div>
         );
     }
 
     renderAboutUsVideo() {
-        return (
-            <div className="videoContainer">
-                <video className="video">
-                    <source src={timelapse} type="video/mp4" />
-                    Your browser does not support the video tag.
-                </video>  
-            </div>
-        )
+        return <ResponsivePlayer />
+
     }
 
     renderOurTeamBoardHeader() {
         return(
-            <div className="aboutHeader">
+            <div className="aboutHeader" name="ourteam">
                 <h1>OUR BOARD MEMBERS</h1>
-                <p>As a family, we make thoughtful decisions for our community, customers and planet. We have 5 Core Values that we live by: Be the Best, Deliver on Promises, Be Better Together, Stay Authentic, and Spread Good Vibes. </p>
+                <TeamMembers type="boardMembers" />
             </div>
         );
     }
@@ -45,7 +44,7 @@ class about extends Component {
         return(
             <div className="aboutHeader">
                 <h1>OUR EXECUTIVE TEAM</h1>
-                <p>As a family, we make thoughtful decisions for our community, customers and planet. We have 5 Core Values that we live by: Be the Best, Deliver on Promises, Be Better Together, Stay Authentic, and Spread Good Vibes. </p>
+                <TeamMembers type="execMembers"/>
             </div>
         );
     }
@@ -58,9 +57,9 @@ class about extends Component {
 
         return (
             <React.Fragment>
-                {header},
-                {aboutUsVideo},
-                {ourTeamBoardHeader},
+                {header}
+                {aboutUsVideo}
+                {ourTeamBoardHeader}
                 {ourTeamExecHeader}
 
             </React.Fragment>

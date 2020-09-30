@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './mainPage.css'
-import Typist from 'react-typist';
 import timelapse from './dctimelapse.mp4';
 
 class mainPage extends Component {
@@ -24,19 +23,8 @@ class mainPage extends Component {
         )
     }
 
-    renderTypeWriter() {
-        return(
-            <Typist className="typistHeader" cursor={{ show:false }}>
-            <span style={{visibility: "hidden", fontSize: "1.5rem"}}>.</span>
-            <Typist.Delay ms={1500} />
-                <span style={{fontSize: "1.5rem"}}>Providing legitimate, high quality products to DC consumers. Lab tested and DC grown.</span>
-            </Typist>
-        )
-    }
-
     renderLandingPage() {
         const videoContent = this.renderMainVideoContent();
-        const typewriter = this.renderTypeWriter();
 
         return(
             <div>

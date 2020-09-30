@@ -15,8 +15,8 @@ class homePage extends Component {
     render() {
         return (
             <React.Fragment>
-                <NavBar />,
-                <MainPage/>,
+                <NavBar history={this.props.history}/>
+                <MainPage/>
                 <About />
             </React.Fragment>
         )
