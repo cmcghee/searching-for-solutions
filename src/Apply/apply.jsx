@@ -23,13 +23,14 @@ class Apply extends Component {
         this.state = {
             selectOpen: false,
             dob: null,
-            name:'',
+            name: '',
             prefferedName: '',
             email: '',
             confirmEmail: '',
             pronouns: '',
             language: '',
             college: '',
+            major: '',
             collegeParagraph: '',
             gender: '',
             race: '',
@@ -54,6 +55,7 @@ class Apply extends Component {
                 emailError: false,
                 confirmEmailError: false,
                 genderError: false,
+                raceError: false,
                 languageError: false,
                 educationError: false,
                 collegeError: false,
@@ -66,7 +68,9 @@ class Apply extends Component {
                 zipError: false,
                 availabilityError: false,
                 volunteerTimeError: false,
-
+                prefferedDayError: false,
+                volunteerExpError: false,
+                volunteerOrgError: false
             }
         }
     }
@@ -117,13 +121,12 @@ class Apply extends Component {
     };
 
     handleStateSelect = (e) => {
-        console.log(e)
         this.setState({state: e.target.value})
     }
 
     validateOnBlur = field => e => {
         e.preventDefault();
-        const { nameRegex, emailRegex } = regex;
+        const { nameRegex, emailRegex, addressRegex, onlyNumbersRegex, numbersAndLettersRegex } = regex;
         let errors = this.state.errors
 
         switch (field) {
@@ -142,13 +145,76 @@ class Apply extends Component {
             case 'confirmEmail':
                 this.setState({ errors: { ...errors, confirmEmailError: !emailRegex.test(e.target.value) || this.state.confirmEmail !== this.state.email } });
                 break;
+            case 'gender':
+                this.setState({ errors: { ...errors, genderError: this.state.gender === '' } });
+                break;
+            case 'race':
+                this.setState({ errors: { ...errors, raceError: this.state.race === '' } });
+                break;
+            case 'language':
+                this.setState({ errors: { ...errors, languageError: this.state.language === '' } });
+                break;
+            case 'education':
+                this.setState({ errors: { ...errors, educationError: this.state.schoolType === '' } });
+                break;
+            case 'college':
+                this.setState({ errors: { ...errors, collegeError: !nameRegex.test(e.target.value) } });
+                break;
+            case 'major':
+                this.setState({ errors: { ...errors, majorError: !nameRegex.test(e.target.value) } });
+                break;
+            case 'schoolYear':
+                this.setState({ errors: { ...errors, schoolYearError: this.state.schoolYear === '' } });
+                break;
+            case 'collegeParagraph':
+                this.setState({ errors: { ...errors, collegeParagraphError: this.state.collegeParagraph.length >= 500 || this.state.collegeParagraph.length === 0 } });
+                break;
+            case 'address1':
+                this.setState({ errors: { ...errors, address1Error: !addressRegex.test(e.target.value) } });
+                break;
+            case 'city':
+                this.setState({ errors: { ...errors, cityError: !nameRegex.test(e.target.value) } });
+                break;
+            case 'state':
+                this.setState({ errors: { ...errors, stateError: this.state.state === '' } });
+                break;
+            case 'zip':
+                this.setState({ errors: { ...errors, zipError: !onlyNumbersRegex.test(e.target.value) } });
+                break;
+            case 'availability':
+                this.setState({ errors: { ...errors, availabilityError: !numbersAndLettersRegex.test(e.target.value) } });
+                break;
+            case 'volunteerTime':
+                this.setState({ errors: { ...errors, volunteerTimeError: !numbersAndLettersRegex.test(e.target.value) } });
+                break; 
+            case 'prefferedDay':
+                this.setState({ errors: { ...errors, prefferedDayError: this.state.prefferedDay === ''} });
+                break;
+            case 'volunteerExp':
+                this.setState({ errors: { ...errors, volunteerExpError: this.state.volunteerExp === ''} });
+                break;
+            case 'volunteerOrg':
+                this.setState({ errors: { ...errors, volunteerOrgError: this.state.volunteerOrg === ''} });
+                break;     
             default: 
                 break;
         }
     }
 
+    validateForm = (errors, formValues) => {
+        let valid = true;
+        Object.values(errors).forEach(
+          (val) => val === true && (valid = false)
+        );
+        return valid;
+      }
+
     handleSubmit = e => {
-        console.log(this.state.errors.nameError)
+        if(this.validateForm(this.state.errors, this.state)) {
+            console.log("valid")
+            return;
+        }
+        console.log("not valid")
     }
 
     //Volunteer Info
@@ -158,6 +224,7 @@ class Apply extends Component {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                     <TextField
+                        required
                         error={this.state.errors.nameError}
                         id="name"
                         placeholder="First/Last"
@@ -182,6 +249,7 @@ class Apply extends Component {
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
+                            required
                             error={this.state.errors.dobError}
                             disableToolbar
                             variant="inline"
@@ -240,10 +308,12 @@ class Apply extends Component {
                     <FormControl>
                         <InputLabel>Gender</InputLabel>
                             <Select
+                            required
                             error={this.state.errors.genderError}
                             id="gender"
                             value={this.state.gender}
                             onChange={this.handleGenderSelect}
+                            onBlur={this.validateOnBlur("gender")}
                             fullWidth
                             >
                                 <MenuItem value='male'>Male</MenuItem>
@@ -257,9 +327,12 @@ class Apply extends Component {
                     <FormControl>
                         <InputLabel>Race</InputLabel>
                             <Select
+                            required
+                            error={this.state.errors.raceError}
                             id="Race"
                             value={this.state.race}
                             onChange={this.handleRaceSelect}
+                            onBlur={this.validateOnBlur("race")}
                             fullWidth
                             >
                                 <MenuItem value='alaska-indian'>American Indian or Alaska Native</MenuItem>
@@ -283,10 +356,13 @@ class Apply extends Component {
                 </Grid>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={3}>
                         <TextField
+                            required
+                            error={this.state.errors.languageError}
                             id="language"
                             label="Primary Language"
                             value={this.state.language}
                             onChange={this.handleTextField("language")}
+                            onBlur={this.validateOnBlur("language")}
                             fullWidth
                         />
                 </Grid>
@@ -303,8 +379,11 @@ class Apply extends Component {
                 <FormControl>
                     <InputLabel>Education</InputLabel>
                         <Select
+                            required
+                            error={this.state.errors.educationError}
                             id="education"
                             value={this.state.schoolType}
+                            onBlur={this.validateOnBlur('education')}
                             onChange={this.handleSchoolSelect}
                         >
                             <MenuItem value='college'>College</MenuItem>
@@ -325,17 +404,24 @@ class Apply extends Component {
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                     <TextField
+                        required
+                        error={this.state.errors.collegeError}
                         id="college/uni"
                         label="College/University"
                         value={this.state.college}
                         onChange={this.handleTextField("college")}
+                        onBlur={this.validateOnBlur('college')}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                 <TextField
+                        required
+                        error={this.state.errors.majorError}
                         id="major"
                         label="Major/Area of Focus"
+                        onChange={this.handleTextField("major")}
+                        onBlur={this.validateOnBlur('major')}
                         fullWidth
                     />
                 </Grid>
@@ -343,9 +429,12 @@ class Apply extends Component {
                     <FormControl>
                         <InputLabel>School Year</InputLabel>
                             <Select
+                                required
+                                error={this.state.errors.schoolYearError}
                                 id="schoolYear"
                                 value={this.state.schoolYear}
                                 onChange={this.handleSchoolYearSelect}
+                                onBlur={this.validateOnBlur('schoolYear')}
                             >
                                 <MenuItem value='freshman'>Freshman</MenuItem>
                                 <MenuItem value='sophomore'>Sophomore</MenuItem>
@@ -369,14 +458,16 @@ class Apply extends Component {
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <InputLabel>How does your scholastic experience prepare you to be a volunteer tutor with our organization? (Max 500 characters)</InputLabel>
                     <TextField
+                        required
                         id="reason"
+                        error={this.state.errors.collegeParagraphError}
                         fullWidth
                         multiline={true}
                         rows={3}
                         variant="outlined"
                         value={this.state.collegeParagraph}
                         onChange={this.handleTextField("collegeParagraph")}
-                        maxLength={500}
+                        onBlur={this.validateOnBlur('collegeParagraph')}
                     />
                 </Grid>
             </Grid>
@@ -390,10 +481,13 @@ class Apply extends Component {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <TextField
+                        required
+                        error={this.state.errors.address1Error}
                         id="address1"
                         label="Address Line 1"
                         value={this.state.address1}
                         onChange={this.handleTextField("address1")}
+                        onBlur={this.validateOnBlur('address1')}
                         fullWidth
                     />
                 </Grid>
@@ -424,10 +518,13 @@ class Apply extends Component {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                     <TextField
+                        required
+                        error={this.state.errors.cityError}
                         id="City"
                         label="City"
                         value={this.state.city}
                         onChange={this.handleTextField("city")}
+                        onBlur={this.validateOnBlur('city')}
                         fullWidth
                     />
                 </Grid>
@@ -435,9 +532,12 @@ class Apply extends Component {
                 <FormControl>
                     <InputLabel>State</InputLabel>
                         <Select
+                            required
+                            error={this.state.errors.stateError}
                             id="state"
                             value={this.state.state}
                             onChange={this.handleStateSelect}
+                            onBlur={this.validateOnBlur('state')}
                         >
                             {stateMenu}
                         </Select>
@@ -445,10 +545,13 @@ class Apply extends Component {
                 </Grid>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
                     <TextField
+                        required
+                        error={this.state.errors.zipError}
                         id="zip"
                         label="Zip Code"
                         value={this.state.zip}
                         onChange={this.handleTextField("zip")}
+                        onBlur={this.validateOnBlur('zip')}
                         fullWidth
                     />
                 </Grid>
@@ -461,19 +564,25 @@ class Apply extends Component {
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
                     <TextField
-                            id="availability"
-                            label="Availability (flexible, weekdays, weekends)"
-                            value={this.state.availability}
-                            onChange={this.handleTextField("availability")}
-                            fullWidth
+                        required
+                        error={this.state.errors.availabilityError}
+                        id="availability"
+                        label="Availability (flexible, weekdays, weekends)"
+                        value={this.state.availability}
+                        onChange={this.handleTextField("availability")}
+                        onBlur={this.validateOnBlur('availability')}
+                        fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
                     <TextField
+                        required
+                        error={this.state.errors.volunteerTimeError}
                         id="volunteerTime"
                         label="Preffered Volunteer Time (i.e. 90 minutes)"
                         value={this.state.volunteerTime}
                         onChange={this.handleTextField("volunteerTime")}
+                        onBlur={this.validateOnBlur('volunterTime')}
                         fullWidth
                     />
                 </Grid>
@@ -481,9 +590,12 @@ class Apply extends Component {
                     <FormControl>
                     <div className="textAreaHeader">Preferred Volunteer Day</div>
                             <Select
+                                required
+                                error={this.state.errors.prefferedDayError}
                                 id="prefferedDay"
                                 value={this.state.prefferedDay}
                                 onChange={this.handlePrefferedDay}
+                                onBlur={this.validateOnBlur('prefferedDay')}
                             >
                                 <MenuItem value='monday'>Monday</MenuItem>
                                 <MenuItem value='tuesday'>Tuesday</MenuItem>
@@ -508,9 +620,12 @@ class Apply extends Component {
                     <FormControl>
                     <div className="textAreaHeader">Have you previously worked with children in a volunteer capacity?</div>
                             <Select
+                                required
+                                error={this.state.errors.volunteerExpError}
                                 id="workwithchildren"
                                 value={this.state.previousWork}
                                 onChange={this.handlePreviousWork}
+                                onBlur={this.validateOnBlur('volunteerExp')}
                             >
                                 <MenuItem value='yes'>Yes</MenuItem>
                                 <MenuItem value='no'>No</MenuItem>
@@ -530,9 +645,12 @@ class Apply extends Component {
                     <FormControl>
                     <div className="textAreaHeader">Have you previously volunteered with a nonprofit organization?</div>
                             <Select
+                                required
+                                error={this.state.errors.volunteerOrgError}
                                 id="previousOrg"
                                 value={this.state.previousVolunteer}
                                 onChange={this.handlePreviousVolunteer}
+                                onBlur={this.validateOnBlur('volunteerOrg')}
                             >
                                 <MenuItem value='yes'>Yes</MenuItem>
                                 <MenuItem value='no'>No</MenuItem>
@@ -577,32 +695,34 @@ class Apply extends Component {
         const submit = this.renderSubmit();
     
         return (
-            <div className="formContainer">
-                <div className="appSection">
-                <div className="appSectionHeader">Volunteer Info</div>
-                    {volunteerInfo}
-                    {volunteerInfo2}
-                    {volunteerInfo3} 
-                </div>
-                <div className="appSection">
-                <div className="appSectionHeader">Education Info</div>
-                    {schoolSelect}
-                    {collegeInfo}
-                    {collegeExp}
-                </div>
-                <div className="appSection">
-                <div className="appSectionHeader">Personal Info</div>
-                    {address1}
-                    {address2}
-                    {citystatezip}
-                    {availability}
-                </div>
-                <div className="appSection">
-                <div className="appSectionHeader">Previous Volunteer Experience</div>
-                    {volunteerExp}
-                </div>
-                {submit}
+            <form onSubmit={this.handleSubmit}>
+                <div className="formContainer">
+                    <div className="appSection">
+                    <div className="appSectionHeader">Volunteer Info</div>
+                        {volunteerInfo}
+                        {volunteerInfo2}
+                        {volunteerInfo3} 
+                    </div>
+                    <div className="appSection">
+                    <div className="appSectionHeader">Education Info</div>
+                        {schoolSelect}
+                        {collegeInfo}
+                        {collegeExp}
+                    </div>
+                    <div className="appSection">
+                    <div className="appSectionHeader">Personal Info</div>
+                        {address1}
+                        {address2}
+                        {citystatezip}
+                        {availability}
+                    </div>
+                    <div className="appSection">
+                    <div className="appSectionHeader">Previous Volunteer Experience</div>
+                        {volunteerExp}
+                    </div>
+                    {submit}
             </div>
+            </form>
         );
     }
 

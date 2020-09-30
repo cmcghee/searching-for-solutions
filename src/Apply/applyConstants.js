@@ -2,5 +2,8 @@ export const states = ['Alabama','Alaska','American Samoa','Arizona','Arkansas',
 
 export const regex = {
     nameRegex: RegExp(/^([a-zA-Z\s]{1,}$)/),
-    emailRegex: RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i)
+    emailRegex: RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i),
+    addressRegex: RegExp(/[A-Za-z0-9'.\-\s,]/),
+    onlyNumbersRegex: RegExp(/^[0-9]{1,10}$/),
+    numbersAndLettersRegex: RegExp(/^([a-zA-Z0-9\s]{1,}$)/)
 }
