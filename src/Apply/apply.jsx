@@ -48,6 +48,13 @@ class Apply extends Component {
             previousWork: '',
             previousVolunteer: '',
             prefferedDay: '',
+            highschoolYear: '',
+            highschoolImpactfulBook: '',
+            highschoolImpactfulBookParagraph: '',
+            highschoolImportantBook: '',
+            highschoolImportantBookParagraph: '',
+            highschoolScholasticExp: '',
+            highschoolPersonalInterests: '',
             errors: {
                 nameError: false,
                 preferredNickNameError: false,
@@ -70,7 +77,14 @@ class Apply extends Component {
                 volunteerTimeError: false,
                 prefferedDayError: false,
                 volunteerExpError: false,
-                volunteerOrgError: false
+                volunteerOrgError: false,
+                highschoolYearError: false,
+                highschoolImpactfulBookError: false,
+                highschoolImpactfulBookParagraphError: false,
+                highschoolImportantBookError: false,
+                highschoolImportantBookParagraphError: false,
+                highschoolScholasticExpError: false,
+                highschoolPersonalInterestsError: false,
             }
         }
     }
@@ -95,6 +109,10 @@ class Apply extends Component {
     handleSchoolYearSelect = (e) => {
         this.setState({schoolYear: e.target.value})
     };
+
+    handleHighSchoolYearSelect = (e) => {
+        this.setState({highschoolYear: e.target.value})
+    }
 
     handleRaceSelect = (e) => {
         this.setState({race: e.target.value})
@@ -374,7 +392,7 @@ class Apply extends Component {
 
     renderSchoolSelect() {
         return (
-            <Grid container>
+            <Grid container spacing={4}>
                 <Grid item xs={12} sm={6} md={4} lg={2} xl={2}>
                 <FormControl>
                     <InputLabel>Education</InputLabel>
@@ -449,10 +467,6 @@ class Apply extends Component {
     }
 
     renderCollegeExperience() {
-        if ( this.state.schoolType === 'highschool' ) {
-            return null;
-        }
-
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
@@ -471,6 +485,190 @@ class Apply extends Component {
                     />
                 </Grid>
             </Grid>
+        )
+    }
+
+    renderHighschoolSchoolYear() {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
+                    <FormControl>
+                        <InputLabel>School Year</InputLabel>
+                            <Select
+                                required
+                                error={this.state.errors.highschoolYearError}
+                                id="highschoolYear"
+                                value={this.state.highschoolYear}
+                                onChange={this.handleHighSchoolYearSelect}
+                                onBlur={this.validateOnBlur('highschoolYear')}
+                            >
+                                <MenuItem value='freshman'>Freshman</MenuItem>
+                                <MenuItem value='sophomore'>Sophomore</MenuItem>
+                                <MenuItem value='junior'>Junior</MenuItem>
+                                <MenuItem value='senior'>Senior</MenuItem>
+                            </Select>
+                    </FormControl>
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderImpactfulBook() {
+        return (
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                <InputLabel>Most impactful book you've read for school?</InputLabel>
+                    <TextField
+                        required
+                        error={this.state.errors.highschoolImpactfulBookError}
+                        id="highschoolImpactfulBook"
+                        value={this.state.highschoolImpactfulBook}
+                        onChange={this.handleTextField("highschoolImpactfulBook")}
+                        onBlur={this.validateOnBlur('highschoolImpactfulBookError')}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderImpactfulBookParagraph() {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <InputLabel>Why? (In 200 words or less)</InputLabel>
+                    <TextField
+                        required
+                        id="impactfulBookPara"
+                        error={this.state.errors.highschoolImpactfulBookParagraphError}
+                        fullWidth
+                        multiline={true}
+                        rows={3}
+                        variant="outlined"
+                        value={this.state.highschoolImpactfulBookParagraph}
+                        onChange={this.handleTextField("highschoolImpactfulBookParagraph")}
+                        onBlur={this.validateOnBlur('highschoolImpactfulBookParagraphError')}
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderImportantBook() {
+        return (
+            <Grid container spacing={2}>
+                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
+                <InputLabel>Most important book you've read for personal development?</InputLabel>
+                    <TextField
+                        required
+                        error={this.state.errors.highschoolImportantBookError}
+                        id="highschoolImportantBook"
+                        value={this.state.highschoolImportantBook}
+                        onChange={this.handleTextField("highschoolImportantBook")}
+                        onBlur={this.validateOnBlur('highschoolImportantBookError')}
+                        fullWidth
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderImportantBookParagraph() {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <InputLabel>Why? (In 200 words or less)</InputLabel>
+                    <TextField
+                        required
+                        id="importantBookPara"
+                        error={this.state.errors.highschoolImportantBookParagraphError}
+                        fullWidth
+                        multiline={true}
+                        rows={3}
+                        variant="outlined"
+                        value={this.state.highschoolImportantBookParagraph}
+                        onChange={this.handleTextField("highschoolImportantBookParagraph")}
+                        onBlur={this.validateOnBlur('highschoolImportantBookParagraphError')}
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderScholasticExp() {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <InputLabel>How does your scholastic experience prepare you to be a volunteer tutor with our organization?</InputLabel>
+                    <TextField
+                        required
+                        id="scholaticExp"
+                        error={this.state.errors.highschoolScholasticExpError}
+                        fullWidth
+                        multiline={true}
+                        rows={2}
+                        variant="outlined"
+                        value={this.state.highschoolScholasticExp}
+                        onChange={this.handleTextField("highschoolScholasticExp")}
+                        onBlur={this.validateOnBlur('highschoolScholasticExpError')}
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderPersonalInterests() {
+        return (
+            <Grid container spacing={4}>
+                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
+                <InputLabel>What are you interested in?</InputLabel>
+                    <TextField
+                        required
+                        id="personalInterests"
+                        error={this.state.errors.highschoolPersonalInterestsError}
+                        fullWidth
+                        multiline={true}
+                        rows={2}
+                        variant="outlined"
+                        value={this.state.highschoolPersonalInterests}
+                        onChange={this.handleTextField("highschoolPersonalInterests")}
+                        onBlur={this.validateOnBlur('highschoolPersonalInterestsError')}
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
+
+    renderSchoolInfo() {
+        const collegeInfo = this.renderCollegeInfo();
+        const collegeExp = this.renderCollegeExperience();
+        const highschoolYear = this.renderHighschoolSchoolYear();
+        const impactfulBook = this.renderImpactfulBook();
+        const impactfulBookPara = this.renderImpactfulBookParagraph();
+        const importantBook = this.renderImportantBook();
+        const importantBookPara = this.renderImportantBookParagraph();
+        const scholasticExp = this.renderScholasticExp();
+        const personalInterest = this.renderPersonalInterests();
+
+        if ( this.state.schoolType === 'college' || this.state.schoolType === '') {
+            return (
+                <React.Fragment>
+                    {collegeInfo}
+                    {collegeExp}
+                </React.Fragment>
+            )
+        }
+
+        return (
+            <React.Fragment>
+                {highschoolYear}
+                {impactfulBook}
+                {impactfulBookPara}
+                {importantBook}
+                {importantBookPara}
+                {scholasticExp}
+                {personalInterest}
+            </React.Fragment>
         )
     }
 
@@ -635,7 +833,7 @@ class Apply extends Component {
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                     <TextField
                         id="volunteerOrg"
-                        label="(If Yes) List name of organization"
+                        label="(If Yes) List name of organization(s)"
                         value={this.state.volunteerOrg}
                         onChange={this.handleTextField("volunteerOrg")}
                         fullWidth
@@ -660,7 +858,7 @@ class Apply extends Component {
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
                 <TextField
                         id="volunteerRole"
-                        label="(If Yes) Please List your role"
+                        label="(If Yes) Please List your role(s)"
                         value={this.state.volunteerRole}
                         onChange={this.handleTextField("volunteerRole")}
                         fullWidth
@@ -685,8 +883,7 @@ class Apply extends Component {
         const volunteerInfo2 = this.renderEmails();
         const volunteerInfo3 = this.renderGenderInfo();
         const schoolSelect = this.renderSchoolSelect();
-        const collegeInfo = this.renderCollegeInfo();
-        const collegeExp = this.renderCollegeExperience();
+        const schoolInfo = this.renderSchoolInfo();
         const address1 = this.renderAddress1();
         const address2 = this.renderAddress2();
         const citystatezip = this.renderCityStateZip();
@@ -706,8 +903,7 @@ class Apply extends Component {
                     <div className="appSection">
                     <div className="appSectionHeader">Education Info</div>
                         {schoolSelect}
-                        {collegeInfo}
-                        {collegeExp}
+                        {schoolInfo}
                     </div>
                     <div className="appSection">
                     <div className="appSectionHeader">Personal Info</div>

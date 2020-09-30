@@ -31,6 +31,10 @@ div.MuiSelect-select {
     min-width: 120px;
 }
 
+label.MuiFormLabel-root {
+    padding-bottom: 5px
+}
+
 .appSection {
     padding-bottom: 40px;
 }
