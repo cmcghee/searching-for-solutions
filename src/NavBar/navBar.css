@@ -9,4 +9,18 @@ button.MuiButton-root.leftSideButtons {
     margin-left: auto;
 }
 
+button.MuiButton-root.leftSideButtons.menuButton {
+    margin-left: auto;
+    color: white;
+}
+
+.logo {
+    width:130px;
+    height:100px;
+}
+
+.MuiMenuItem-root.menuSelection {
+    font-family: 'Comfortaa';
+}
+
 

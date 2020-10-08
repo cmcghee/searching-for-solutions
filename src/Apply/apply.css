@@ -3,7 +3,26 @@
     font-family: 'Comfortaa';
     margin-bottom: 0px;
     padding-bottom: 35px;
+}
+
+.header{
+    margin-bottom: 0px;
+    padding-bottom: 35px;
     padding-top: 6rem;
+}
+
+.successHeader {
+    text-align: center;
+    font-family: 'Comfortaa';
+    font-size: 30px;
+    margin-bottom: 0px;
+    padding-bottom: 15px;
+    padding-top: 1rem;
+}
+
+.subHeader {
+    text-align: center;
+    font-family: 'Comfortaa';
 }
 
 @media screen and (max-width: 770px) {
@@ -22,6 +41,14 @@
 div.MuiGrid-root {
     padding-bottom:20px;
 }
+
+svg.MuiSvgIcon-root.checkIcon {
+    font-size: 10rem;
+    display: block;
+    margin: auto;
+    color: #228B22;
+}
+
 .buttonContainer {
     text-align: center;
     padding-bottom: 40px;

@@ -15,6 +15,8 @@ import DateFnsUtils from '@date-io/date-fns';
 import Button from '@material-ui/core/Button';
 import './apply.css'
 import { states, regex } from './applyConstants';
+import ApplyComplete from './applyComplete';
+import emailjs from 'emailjs-com';
 
 class Apply extends Component {
     constructor(props) {
@@ -55,6 +57,7 @@ class Apply extends Component {
             highschoolImportantBookParagraph: '',
             highschoolScholasticExp: '',
             highschoolPersonalInterests: '',
+            formComplete: false,
             errors: {
                 nameError: false,
                 preferredNickNameError: false,
@@ -97,55 +100,18 @@ class Apply extends Component {
         );
     }
 
-    handleTextField = field => (e) => {
+    handleFieldChange = field => (e) => {
         e.preventDefault();
         this.setState({[field]: e.target.value})
     }
-
-    handleSchoolSelect = (e) => {
-        this.setState({schoolType: e.target.value})
-    };
-
-    handleSchoolYearSelect = (e) => {
-        this.setState({schoolYear: e.target.value})
-    };
-
-    handleHighSchoolYearSelect = (e) => {
-        this.setState({highschoolYear: e.target.value})
-    }
-
-    handleRaceSelect = (e) => {
-        this.setState({race: e.target.value})
-    };
-
-    handleGenderSelect = (e) => {
-        this.setState({gender: e.target.value})
-    };
-
-    handlePreviousWork = (e) => {
-        this.setState({previousWork: e.target.value})
-    };
-
-    handlePreviousVolunteer = (e) => {
-        this.setState({previousVolunteer: e.target.value})
-    };
-
-    handlePrefferedDay = (e) => {
-        this.setState({prefferedDay: e.target.value})
-    };
 
     handleDateChange = (date) => {
         this.setState({dob: date});
     };
 
-    handleStateSelect = (e) => {
-        this.setState({state: e.target.value})
-    }
-
     validateOnBlur = field => e => {
-        e.preventDefault();
         const { nameRegex, emailRegex, addressRegex, onlyNumbersRegex, numbersAndLettersRegex } = regex;
-        let errors = this.state.errors
+        let errors = this.state.errors;
 
         switch (field) {
             case 'name':
@@ -184,8 +150,23 @@ class Apply extends Component {
             case 'schoolYear':
                 this.setState({ errors: { ...errors, schoolYearError: this.state.schoolYear === '' } });
                 break;
+            case 'highschoolYear':
+                this.setState({ errors: { ...errors, highschoolYearError: this.state.highschoolYear === '' } });
+                break;
             case 'collegeParagraph':
                 this.setState({ errors: { ...errors, collegeParagraphError: this.state.collegeParagraph.length >= 500 || this.state.collegeParagraph.length === 0 } });
+                break;
+            case 'highschoolImportantBookParagraph':
+                this.setState({ errors: { ...errors, highschoolImportantBookParagraphError: this.state.highschoolImportantBookParagraph.length >= 200 || this.state.highschoolImportantBookParagraph.length === 0 } });
+                break;
+            case 'highschoolImpactfulBookParagraph':
+                this.setState({ errors: { ...errors, highschoolImpactfulBookParagraphError: this.state.highschoolImpactfulBookParagraph.length >= 200 || this.state.highschoolImpactfulBookParagraph.length === 0 } });
+                break;
+            case 'highschoolScholasticExp':
+                this.setState({ errors: { ...errors, highschoolScholasticExpError: this.state.highschoolScholasticExp.length >= 500 || this.state.highschoolScholasticExp.length === 0 } });
+                break;
+            case 'highschoolPersonalInterests':
+                this.setState({ errors: { ...errors, highschoolPersonalInterestsError: this.state.highschoolPersonalInterests.length >= 500 || this.state.highschoolPersonalInterests.length === 0 } });
                 break;
             case 'address1':
                 this.setState({ errors: { ...errors, address1Error: !addressRegex.test(e.target.value) } });
@@ -219,7 +200,7 @@ class Apply extends Component {
         }
     }
 
-    validateForm = (errors, formValues) => {
+    validateForm = (errors) => {
         let valid = true;
         Object.values(errors).forEach(
           (val) => val === true && (valid = false)
@@ -229,10 +210,78 @@ class Apply extends Component {
 
     handleSubmit = e => {
         if(this.validateForm(this.state.errors, this.state)) {
-            console.log("valid")
+            this.setState({formComplete: true})
+
+            let collegeForm = {
+                subjectName: this.state.name,
+                name: "Name: " + this.state.name,
+                prefferedName: 'Nickname: ' + this.state.prefferedName,
+                email: 'Email: ' +this.state.email,
+                pronouns: 'Pronouns: ' + this.state.pronouns,
+                language: 'Language: ' + this.state.language,
+                college: 'College/University: ' + this.state.college,
+                major: 'Major or area of focus: ' + this.state.major,
+                collegeParagraph: 'How does your scholastic experience prepare you to be a volunteer tutor with our organization? (Max 500 characters): ' + this.state.collegeParagraph,
+                gender: 'Gender: ' + this.state.gender,
+                race: 'Race: ' + this.state.race,
+                address1: 'Address line 1: ' + this.state.address1,
+                address2: 'Address line 2: ' + this.state.address2,
+                city: 'City: ' + this.state.city,
+                state: 'State: ' + this.state.state,
+                zip: 'Zip: ' + this.state.zip,
+                volunteerRole: '(If Yes) Please List your role(s): ' + this.state.volunteerRole,
+                volunteerOrg: '(If Yes) Please List your role(s): ' + this.state.volunteerOrg,
+                availability: 'Availability: ' + this.state.availability,
+                volunteerTime: 'Preffered volunteer time: ' + this.state.volunteerTime,
+                schoolType: 'Current education: ' + this.state.schoolType,
+                schoolYear: 'Current college year: ' + this.state.schoolYear,
+                previousWork: 'Have you previously worked with children in a volunteer capacity?: ' + this.state.previousWork,
+                previousVolunteer: 'Have you previously volunteered with a nonprofit organization?: ' + this.state.previousVolunteer,
+                prefferedDay: 'Preffered volunteer day: ' + this.state.prefferedDay,
+            }
+
+            let highschoolForm = {
+                subjectName: this.state.name,
+                name: "Name: " + this.state.name,
+                prefferedName: 'Nickname: ' + this.state.prefferedName,
+                email: 'Email: ' +this.state.email,
+                pronouns: 'Pronouns: ' + this.state.pronouns,
+                language: 'Language: ' + this.state.language,
+                gender: 'Gender: ' + this.state.gender,
+                race: 'Race: ' + this.state.race,
+                address1: 'Address line 1: ' + this.state.address1,
+                address2: 'Address line 2: ' + this.state.address2,
+                city: 'City: ' + this.state.city,
+                state: 'State: ' + this.state.state,
+                zip: 'Zip: ' + this.state.zip,
+                volunteerRole: '(If Yes) Please List your role(s): ' + this.state.volunteerRole,
+                volunteerOrg: '(If Yes) Please List your role(s): ' + this.state.volunteerOrg,
+                availability: 'Availability: ' + this.state.availability,
+                volunteerTime: 'Preffered volunteer time: ' + this.state.volunteerTime,
+                schoolType: 'Current education: ' + this.state.schoolType,
+                previousWork: 'Have you previously worked with children in a volunteer capacity?: ' + this.state.previousWork,
+                previousVolunteer: 'Have you previously volunteered with a nonprofit organization?: ' + this.state.previousVolunteer,
+                prefferedDay: 'Preffered volunteer day: ' + this.state.prefferedDay,
+                highschoolYear: 'Highschool year: ' + this.state.highschoolYear,
+                highschoolImpactfulBook: 'Most impactful book youve read for school?: ' + this.state.highschoolImpactfulBook ,
+                highschoolImpactfulBookParagraph: 'Why? (In 200 words or less): ' + this.state.highschoolImpactfulBookParagraph,
+                highschoolImportantBook: 'Most important book youve read for personal development?: ' + this.state.highschoolImportantBook,
+                highschoolImportantBookParagraph: 'Why? (In 200 words or less): ' + this.state.highschoolImportantBookParagraph,
+                highschoolScholasticExp: '​How does your scholastic experience prepare you to be a volunteer tutor with our organization?: ' + this.state.highschoolScholasticExp,
+                highschoolPersonalInterests: 'What are you interested in?: ' + this.state.highschoolPersonalInterests,
+            }
+
+            let templateID = this.state.schoolType === 'highschool' ? 'template_lzkq4nl' : 'template_3b416ef';
+            let application = this.state.schoolType === 'highschool' ? highschoolForm : collegeForm;
+    
+            emailjs.send('service_sumiwyh', templateID, application, 'user_G9vTuf1N4uUunWWpE7MHa')
+                .then((result) => {
+                    console.log(result.text);
+                }, (error) => {
+                    console.log(error.text);
+                });
             return;
         }
-        console.log("not valid")
     }
 
     //Volunteer Info
@@ -248,7 +297,7 @@ class Apply extends Component {
                         placeholder="First/Last"
                         label="Legal Name"
                         value={this.state.name}
-                        onChange={this.handleTextField("name")}
+                        onChange={this.handleFieldChange("name")}
                         onBlur={this.validateOnBlur("name")}
                         fullWidth
                     />
@@ -259,7 +308,7 @@ class Apply extends Component {
                         id="prefferedNickname"
                         label="Preffered Nickname"
                         value={this.state.prefferedName}
-                        onChange={this.handleTextField("prefferedName")}
+                        onChange={this.handleFieldChange("prefferedName")}
                         onBlur={this.validateOnBlur("prefferedName")}
                         fullWidth
                     />
@@ -298,7 +347,7 @@ class Apply extends Component {
                         id="email"
                         label="Email"
                         value={this.state.email}
-                        onChange={this.handleTextField("email")}
+                        onChange={this.handleFieldChange("email")}
                         onBlur={this.validateOnBlur("email")}
                         fullWidth
                     />
@@ -310,7 +359,7 @@ class Apply extends Component {
                         id="confirm-email"
                         label="Confirm Email"
                         value={this.state.confirmEmail}
-                        onChange={this.handleTextField("confirmEmail")}
+                        onChange={this.handleFieldChange("confirmEmail")}
                         onBlur={this.validateOnBlur("confirmEmail")}
                         fullWidth
                     />
@@ -330,7 +379,7 @@ class Apply extends Component {
                             error={this.state.errors.genderError}
                             id="gender"
                             value={this.state.gender}
-                            onChange={this.handleGenderSelect}
+                            onChange={this.handleFieldChange('gender')}
                             onBlur={this.validateOnBlur("gender")}
                             fullWidth
                             >
@@ -349,7 +398,7 @@ class Apply extends Component {
                             error={this.state.errors.raceError}
                             id="Race"
                             value={this.state.race}
-                            onChange={this.handleRaceSelect}
+                            onChange={this.handleFieldChange('race')}
                             onBlur={this.validateOnBlur("race")}
                             fullWidth
                             >
@@ -368,7 +417,7 @@ class Apply extends Component {
                         id="pronouns"
                         label="Pronouns"
                         value={this.state.pronouns}
-                        onChange={this.handleTextField("pronouns")}
+                        onChange={this.handleFieldChange("pronouns")}
                         fullWidth
                     />
                 </Grid>
@@ -379,7 +428,7 @@ class Apply extends Component {
                             id="language"
                             label="Primary Language"
                             value={this.state.language}
-                            onChange={this.handleTextField("language")}
+                            onChange={this.handleFieldChange("language")}
                             onBlur={this.validateOnBlur("language")}
                             fullWidth
                         />
@@ -399,10 +448,10 @@ class Apply extends Component {
                         <Select
                             required
                             error={this.state.errors.educationError}
-                            id="education"
+                            name="education"
                             value={this.state.schoolType}
                             onBlur={this.validateOnBlur('education')}
-                            onChange={this.handleSchoolSelect}
+                            onChange={this.handleFieldChange('schoolType')}
                         >
                             <MenuItem value='college'>College</MenuItem>
                             <MenuItem value='highschool'>Highschool</MenuItem>
@@ -414,10 +463,6 @@ class Apply extends Component {
     }
 
     renderCollegeInfo() {
-        if ( this.state.schoolType === 'highschool' ) {
-            return null;
-        }
-
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={6} lg={4} xl={4}>
@@ -427,7 +472,7 @@ class Apply extends Component {
                         id="college/uni"
                         label="College/University"
                         value={this.state.college}
-                        onChange={this.handleTextField("college")}
+                        onChange={this.handleFieldChange("college")}
                         onBlur={this.validateOnBlur('college')}
                         fullWidth
                     />
@@ -438,7 +483,7 @@ class Apply extends Component {
                         error={this.state.errors.majorError}
                         id="major"
                         label="Major/Area of Focus"
-                        onChange={this.handleTextField("major")}
+                        onChange={this.handleFieldChange("major")}
                         onBlur={this.validateOnBlur('major')}
                         fullWidth
                     />
@@ -451,7 +496,7 @@ class Apply extends Component {
                                 error={this.state.errors.schoolYearError}
                                 id="schoolYear"
                                 value={this.state.schoolYear}
-                                onChange={this.handleSchoolYearSelect}
+                                onChange={this.handleFieldChange('schoolYear')}
                                 onBlur={this.validateOnBlur('schoolYear')}
                             >
                                 <MenuItem value='freshman'>Freshman</MenuItem>
@@ -480,7 +525,7 @@ class Apply extends Component {
                         rows={3}
                         variant="outlined"
                         value={this.state.collegeParagraph}
-                        onChange={this.handleTextField("collegeParagraph")}
+                        onChange={this.handleFieldChange("collegeParagraph")}
                         onBlur={this.validateOnBlur('collegeParagraph')}
                     />
                 </Grid>
@@ -499,7 +544,7 @@ class Apply extends Component {
                                 error={this.state.errors.highschoolYearError}
                                 id="highschoolYear"
                                 value={this.state.highschoolYear}
-                                onChange={this.handleHighSchoolYearSelect}
+                                onChange={this.handleFieldChange('highschoolYear')}
                                 onBlur={this.validateOnBlur('highschoolYear')}
                             >
                                 <MenuItem value='freshman'>Freshman</MenuItem>
@@ -523,7 +568,7 @@ class Apply extends Component {
                         error={this.state.errors.highschoolImpactfulBookError}
                         id="highschoolImpactfulBook"
                         value={this.state.highschoolImpactfulBook}
-                        onChange={this.handleTextField("highschoolImpactfulBook")}
+                        onChange={this.handleFieldChange("highschoolImpactfulBook")}
                         onBlur={this.validateOnBlur('highschoolImpactfulBookError')}
                         fullWidth
                     />
@@ -546,7 +591,7 @@ class Apply extends Component {
                         rows={3}
                         variant="outlined"
                         value={this.state.highschoolImpactfulBookParagraph}
-                        onChange={this.handleTextField("highschoolImpactfulBookParagraph")}
+                        onChange={this.handleFieldChange("highschoolImpactfulBookParagraph")}
                         onBlur={this.validateOnBlur('highschoolImpactfulBookParagraphError')}
                     />
                 </Grid>
@@ -564,7 +609,7 @@ class Apply extends Component {
                         error={this.state.errors.highschoolImportantBookError}
                         id="highschoolImportantBook"
                         value={this.state.highschoolImportantBook}
-                        onChange={this.handleTextField("highschoolImportantBook")}
+                        onChange={this.handleFieldChange("highschoolImportantBook")}
                         onBlur={this.validateOnBlur('highschoolImportantBookError')}
                         fullWidth
                     />
@@ -587,7 +632,7 @@ class Apply extends Component {
                         rows={3}
                         variant="outlined"
                         value={this.state.highschoolImportantBookParagraph}
-                        onChange={this.handleTextField("highschoolImportantBookParagraph")}
+                        onChange={this.handleFieldChange("highschoolImportantBookParagraph")}
                         onBlur={this.validateOnBlur('highschoolImportantBookParagraphError')}
                     />
                 </Grid>
@@ -609,7 +654,7 @@ class Apply extends Component {
                         rows={2}
                         variant="outlined"
                         value={this.state.highschoolScholasticExp}
-                        onChange={this.handleTextField("highschoolScholasticExp")}
+                        onChange={this.handleFieldChange("highschoolScholasticExp")}
                         onBlur={this.validateOnBlur('highschoolScholasticExpError')}
                     />
                 </Grid>
@@ -631,7 +676,7 @@ class Apply extends Component {
                         rows={2}
                         variant="outlined"
                         value={this.state.highschoolPersonalInterests}
-                        onChange={this.handleTextField("highschoolPersonalInterests")}
+                        onChange={this.handleFieldChange("highschoolPersonalInterests")}
                         onBlur={this.validateOnBlur('highschoolPersonalInterestsError')}
                     />
                 </Grid>
@@ -650,7 +695,7 @@ class Apply extends Component {
         const scholasticExp = this.renderScholasticExp();
         const personalInterest = this.renderPersonalInterests();
 
-        if ( this.state.schoolType === 'college' || this.state.schoolType === '') {
+        if ( this.state.schoolType === 'college') {
             return (
                 <React.Fragment>
                     {collegeInfo}
@@ -659,17 +704,19 @@ class Apply extends Component {
             )
         }
 
-        return (
-            <React.Fragment>
-                {highschoolYear}
-                {impactfulBook}
-                {impactfulBookPara}
-                {importantBook}
-                {importantBookPara}
-                {scholasticExp}
-                {personalInterest}
-            </React.Fragment>
-        )
+        if ( this.state.schoolType === 'highschool') {
+            return (
+                <React.Fragment>
+                    {highschoolYear}
+                    {impactfulBook}
+                    {impactfulBookPara}
+                    {importantBook}
+                    {importantBookPara}
+                    {scholasticExp}
+                    {personalInterest}
+                </React.Fragment>
+            )
+        }
     }
 
     //Personal Info
@@ -684,7 +731,7 @@ class Apply extends Component {
                         id="address1"
                         label="Address Line 1"
                         value={this.state.address1}
-                        onChange={this.handleTextField("address1")}
+                        onChange={this.handleFieldChange("address1")}
                         onBlur={this.validateOnBlur('address1')}
                         fullWidth
                     />
@@ -701,7 +748,7 @@ class Apply extends Component {
                         id="address2"
                         label="Address Line 2"
                         value={this.state.address2}
-                        onChange={this.handleTextField("address2")}
+                        onChange={this.handleFieldChange("address2")}
                         fullWidth
                     />
                 </Grid>
@@ -721,7 +768,7 @@ class Apply extends Component {
                         id="City"
                         label="City"
                         value={this.state.city}
-                        onChange={this.handleTextField("city")}
+                        onChange={this.handleFieldChange("city")}
                         onBlur={this.validateOnBlur('city')}
                         fullWidth
                     />
@@ -734,7 +781,7 @@ class Apply extends Component {
                             error={this.state.errors.stateError}
                             id="state"
                             value={this.state.state}
-                            onChange={this.handleStateSelect}
+                            onChange={this.handleFieldChange('state')}
                             onBlur={this.validateOnBlur('state')}
                         >
                             {stateMenu}
@@ -748,7 +795,7 @@ class Apply extends Component {
                         id="zip"
                         label="Zip Code"
                         value={this.state.zip}
-                        onChange={this.handleTextField("zip")}
+                        onChange={this.handleFieldChange("zip")}
                         onBlur={this.validateOnBlur('zip')}
                         fullWidth
                     />
@@ -761,25 +808,25 @@ class Apply extends Component {
         return (
             <Grid container spacing={4}>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+                <InputLabel>Availability (flexible, weekdays, weekends)</InputLabel>
                     <TextField
                         required
                         error={this.state.errors.availabilityError}
                         id="availability"
-                        label="Availability (flexible, weekdays, weekends)"
                         value={this.state.availability}
-                        onChange={this.handleTextField("availability")}
+                        onChange={this.handleFieldChange("availability")}
                         onBlur={this.validateOnBlur('availability')}
                         fullWidth
                     />
                 </Grid>
                 <Grid item xs={12} sm={12} md={12} lg={12} xl={6}>
+                    <InputLabel>Preffered Volunteer Time (i.e. 90 minutes)</InputLabel>
                     <TextField
                         required
                         error={this.state.errors.volunteerTimeError}
                         id="volunteerTime"
-                        label="Preffered Volunteer Time (i.e. 90 minutes)"
                         value={this.state.volunteerTime}
-                        onChange={this.handleTextField("volunteerTime")}
+                        onChange={this.handleFieldChange("volunteerTime")}
                         onBlur={this.validateOnBlur('volunterTime')}
                         fullWidth
                     />
@@ -792,7 +839,7 @@ class Apply extends Component {
                                 error={this.state.errors.prefferedDayError}
                                 id="prefferedDay"
                                 value={this.state.prefferedDay}
-                                onChange={this.handlePrefferedDay}
+                                onChange={this.handleFieldChange('prefferedDay')}
                                 onBlur={this.validateOnBlur('prefferedDay')}
                             >
                                 <MenuItem value='monday'>Monday</MenuItem>
@@ -820,10 +867,10 @@ class Apply extends Component {
                             <Select
                                 required
                                 error={this.state.errors.volunteerExpError}
-                                id="workwithchildren"
+                                id="previousWork"
                                 value={this.state.previousWork}
-                                onChange={this.handlePreviousWork}
-                                onBlur={this.validateOnBlur('volunteerExp')}
+                                onChange={this.handleFieldChange('previousWork')}
+                                onBlur={this.validateOnBlur('previousWork')}
                             >
                                 <MenuItem value='yes'>Yes</MenuItem>
                                 <MenuItem value='no'>No</MenuItem>
@@ -835,7 +882,7 @@ class Apply extends Component {
                         id="volunteerOrg"
                         label="(If Yes) List name of organization(s)"
                         value={this.state.volunteerOrg}
-                        onChange={this.handleTextField("volunteerOrg")}
+                        onChange={this.handleFieldChange("volunteerOrg")}
                         fullWidth
                     />
                 </Grid>
@@ -845,10 +892,10 @@ class Apply extends Component {
                             <Select
                                 required
                                 error={this.state.errors.volunteerOrgError}
-                                id="previousOrg"
+                                id="previousVolunteer"
                                 value={this.state.previousVolunteer}
-                                onChange={this.handlePreviousVolunteer}
-                                onBlur={this.validateOnBlur('volunteerOrg')}
+                                onChange={this.handleFieldChange('previousVolunteer')}
+                                onBlur={this.validateOnBlur('previousVolunteer')}
                             >
                                 <MenuItem value='yes'>Yes</MenuItem>
                                 <MenuItem value='no'>No</MenuItem>
@@ -860,7 +907,7 @@ class Apply extends Component {
                         id="volunteerRole"
                         label="(If Yes) Please List your role(s)"
                         value={this.state.volunteerRole}
-                        onChange={this.handleTextField("volunteerRole")}
+                        onChange={this.handleFieldChange("volunteerRole")}
                         fullWidth
                     />
                 </Grid>
@@ -871,7 +918,7 @@ class Apply extends Component {
     renderSubmit() {
         return(
             <div className="buttonContainer">
-                <Button variant="contained" type="submit" onClick={this.handleSubmit}>
+                <Button variant="contained" type="submit">
                     APPLY
                 </Button>
             </div>
@@ -890,9 +937,15 @@ class Apply extends Component {
         const availability = this.renderAvailability();
         const volunteerExp = this.renderVolunteerExp();
         const submit = this.renderSubmit();
+        const header = this.renderHeader();
+
+        if(this.state.formComplete === true) {
+            return null;
+        }
     
         return (
             <form onSubmit={this.handleSubmit}>
+                {header}
                 <div className="formContainer">
                     <div className="appSection">
                     <div className="appSectionHeader">Volunteer Info</div>
@@ -922,15 +975,21 @@ class Apply extends Component {
         );
     }
 
+    renderFormSuccess() {
+        if (this.state.formComplete === true) {
+            return <ApplyComplete />
+        }
+    }
+
     render() {
-        const navbar = <NavBar />;
-        const header = this.renderHeader();
+        const navbar = <NavBar history={this.props.history} />;
         const application = this.renderApplication();
+        const formSuccess = this.renderFormSuccess();
 
         return (
             <React.Fragment>
                 {navbar}
-                {header}
+                {formSuccess}
                 {application}
             </React.Fragment>
         );
