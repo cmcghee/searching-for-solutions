@@ -10,6 +10,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/donate" exact component={Donate} />
+          <Route path="/donate" exact component={Donate} />
           <Route path="/apply" exact component={Apply} />
           <Route path="/luke-project" exact component={HomePage} />
         </Switch>

@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
-import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
-import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import imgdarke from './23517947_10203655683748827_386243953407582758_n.jpg'
 import { boardMembers, execMembers } from "./membersInfo"
+import './teamMembers.css'
 
 class teamMembers extends Component {
     constructor(props) {
@@ -22,7 +20,7 @@ class teamMembers extends Component {
     renderMembers() {
         const type = this.props.type === "boardMembers" ? boardMembers : execMembers;
         const members = type.map(member => 
-        <Grid item xs={12} sm={8} md={6} lg={4} xl={3}>
+        <Grid item xs={12} sm={10} md={6} lg={5} xl={3}>
             <Card>
                         <CardMedia
                             component="img"
@@ -30,8 +28,11 @@ class teamMembers extends Component {
                             image={imgdarke}
                         />
                         <CardContent>
-                        <Typography gutterBottom variant="h5" component="h2">
+                        <Typography className="cardName" variant="h5" component="h2" align="left">
                             {member.name}
+                        </Typography>
+                        <Typography className="cardSubtitle" variant="subtitle1" component="h5" align="left">
+                            Founder
                         </Typography>
                         </CardContent>
                     </Card>

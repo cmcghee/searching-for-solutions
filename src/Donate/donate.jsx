@@ -1,19 +1,21 @@
 import React, { Component } from 'react'
 import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
-import Select from '@material-ui/core/Select'
-import InputLabel from '@material-ui/core/InputLabel';
+import NavBar from '../NavBar/navBar'
+import DonateForm from './donateForm'
 import './donate.css';
+import {states, regex} from '../Apply/applyConstants';
+import {Elements, ElementsConsumer} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_51HYxOjFtYKWdDatMBEIEBborDzK1X16uzDG6Bo05T00rUGHe1P');
 
 export default class Donate extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-                 
         }
     }
-
 
     renderHeader() {
         return(
@@ -23,71 +25,28 @@ export default class Donate extends Component {
         );
     }
 
-    renderNameAndDOB() {
-        return(
-            <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-                    <TextField
-                        required
-                        error={this.state.errors.nameError}
-                        id="name"
-                        placeholder="First/Last"
-                        label="Legal Name"
-                        value={this.state.name}
-                        onChange={this.handleFieldChange("name")}
-                        onBlur={this.validateOnBlur("name")}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <TextField
-                        error={this.state.errors.emailError}
-                        required
-                        id="email"
-                        label="Email"
-                        value={this.state.email}
-                        onChange={this.handleFieldChange("email")}
-                        onBlur={this.validateOnBlur("email")}
-                        fullWidth
-                    />
-                </Grid>
-            </Grid>
-        )
-    }
-
-    renderEmails() {
-        return(
-            <Grid container spacing={4}>
-                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <TextField
-                        error={this.state.errors.emailError}
-                        required
-                        id="email"
-                        label="Email"
-                        value={this.state.email}
-                        onChange={this.handleFieldChange("email")}
-                        onBlur={this.validateOnBlur("email")}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <TextField
-                        required
-                        error={this.state.errors.confirmEmailError}
-                        id="confirm-email"
-                        label="Confirm Email"
-                        value={this.state.confirmEmail}
-                        onChange={this.handleFieldChange("confirmEmail")}
-                        onBlur={this.validateOnBlur("confirmEmail")}
-                        fullWidth
-                    />
-                </Grid>
-            </Grid>
-        )
-    }
-
 
     render() {
-        return;
+        const header = this.renderHeader();
+
+        return(
+            <React.Fragment>
+                <NavBar history={this.props.history}/>
+                {header}
+                <Elements stripe={stripePromise}>
+                    <InjectedCheckoutForm />
+                </Elements>
+            </React.Fragment>
+        )
     }
 }
+
+const InjectedCheckoutForm = () => {
+    return (
+      <ElementsConsumer>
+        {({elements, stripe}) => (
+          <DonateForm elements={elements} stripe={stripe} />
+        )}
+      </ElementsConsumer>
+    );
+  };

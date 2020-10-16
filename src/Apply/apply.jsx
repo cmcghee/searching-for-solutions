@@ -101,7 +101,6 @@ class Apply extends Component {
     }
 
     handleFieldChange = field => (e) => {
-        e.preventDefault();
         this.setState({[field]: e.target.value})
     }
 

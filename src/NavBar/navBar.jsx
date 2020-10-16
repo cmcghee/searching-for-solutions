@@ -1,11 +1,11 @@
-import { AppBar, Toolbar, Button, Grid } from '@material-ui/core';
+import { AppBar, Toolbar, Button } from '@material-ui/core';
 import React, { Component } from 'react'
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import * as Scroll from 'react-scroll';
 import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 import './navBar.css';
-import logo from './logo.png'
+import logo from './logo.png';
 
 class navBar extends Component {
     constructor(props) {
@@ -27,6 +27,7 @@ class navBar extends Component {
     }
 
     handleRedirect(url) {
+        this.handleClose();
         this.props.history.push(url)
     }
 
@@ -42,12 +43,6 @@ class navBar extends Component {
 
     componentDidMount() {
         window.addEventListener('resize', this.resize)
-        document.addEventListener('scroll', () => {
-            const isTop = window.scrollY < 100;
-            if (isTop !== this.state.isTop) {
-                this.setState({ isTop })
-            }
-          });
     }
 
     componentWillUnmount() {
@@ -56,16 +51,8 @@ class navBar extends Component {
 
     renderAppBar() {
         const navComponents = this.renderNavComponents();
-
-        if (this.state.isTop) {
-            return (
-            <AppBar style={{background: 'transparent', boxShadow: 'none'}}>
-                {navComponents}
-            </AppBar>
-        )
-        }
         return (
-            <AppBar style={{backgroundColor:'#a9a9a9', boxShadow: 'none'}}>
+            <AppBar style={{backgroundColor:'white', boxShadow: 'none'}}>
                 {navComponents}
             </AppBar>
         );
@@ -76,22 +63,22 @@ class navBar extends Component {
             return(
             <div>
                 <Toolbar>
-                    <img src={logo} alt="" className="logo"/>
+                    <img src={logo} alt="" className="logo" onClick={() => this.handleRedirect('/')}/>
                     <Button aria-controls="simple-menu" aria-haspopup="true" className="leftSideButtons menuButton" onClick={this.handleClick}>
                         Menu
                     </Button>
                     <Menu
-                    id="simple-menu"
-                    anchorEl={this.state.anchorEl}
-                    keepMounted
-                    open={Boolean(this.state.anchorEl)}
-                    onClose={this.handleClose}
+                        id="simple-menu"
+                        anchorEl={this.state.anchorEl}
+                        keepMounted
+                        open={Boolean(this.state.anchorEl)}
+                        onClose={this.handleClose}
                     >
-                    <MenuItem className="menuSelection" onClick={this.handleClose}>About Us</MenuItem>
-                    <MenuItem className="menuSelection" onClick={this.handleClose}>Our Team</MenuItem>
-                    <MenuItem className="menuSelection" onClick={this.handleClose}>Luke Project</MenuItem>
-                    <MenuItem className="menuSelection" onClick={this.handleClose}>Donate</MenuItem>
-                    <MenuItem className="menuSelection" onClick={this.handleClose}>Apply</MenuItem>
+                    <MenuItem className="menuSelection" onClick={() => this.handleScrollToElement("aboutus")}>About Us</MenuItem>
+                    <MenuItem className="menuSelection" onClick={() => this.handleScrollToElement("ourteam")}>Our Team</MenuItem>
+                    <MenuItem className="menuSelection" onClick={() => this.handleRedirect('/luke-project')}>Luke Project</MenuItem>
+                    <MenuItem className="menuSelection" onClick={() => this.handleRedirect('/donate')}>Donate</MenuItem>
+                    <MenuItem className="menuSelection" onClick={() => this.handleRedirect('/apply')}>Apply</MenuItem>
                     </Menu>
                 </Toolbar>
             </div>
@@ -99,28 +86,18 @@ class navBar extends Component {
         }
         return (
             <Toolbar>
-                <img src={logo} alt="" className="logo"/>
-                <Button color="inherit" className="leftSideButtons" onClick={() => this.handleScrollToElement("aboutus")}>About Us</Button>
-                <Button color="inherit" onClick={() => this.handleScrollToElement("ourteam")}>Our Team</Button>
-                <Button color="inherit" onClick={() => this.handleRedirect('/luke-project')}>Luke Project</Button>
-                <Button color="inherit" onClick={() => this.handleRedirect('/donate')}>Donate</Button>
-                <Button color="inherit" onClick={() => this.handleRedirect('/apply')}>Apply</Button>
+                <img src={logo} alt="" className="logo" onClick={() => this.handleRedirect('/')}/>
+                <Button color="inherit" className="leftSideButtons navBarButtons" onClick={() => this.handleScrollToElement("aboutus")}>About Us</Button>
+                <Button color="inherit" className="navBarButtons" onClick={() => this.handleScrollToElement("ourteam")}>Our Team</Button>
+                <Button color="inherit" className="navBarButtons" onClick={() => this.handleRedirect('/luke-project')}>Luke Project</Button>
+                <Button color="inherit" className="navBarButtons" onClick={() => this.handleRedirect('/donate')}>Donate</Button>
+                <Button color="inherit" className="navBarButtons" onClick={() => this.handleRedirect('/apply')}>Apply</Button>
             </Toolbar>
         );
     }
 
-    renderGridAppBar() {
-        const appBar = this.renderAppBar();
-
-        return (
-            <Grid>
-                {appBar}
-            </Grid>
-        );
-    }
-
     render() {
-        const appBar = this.renderGridAppBar();
+        const appBar = this.renderAppBar();
 
         return (
            <React.Fragment>

@@ -10,3 +10,24 @@
     padding-bottom: 35px;
     padding-top: 6rem;
 }
+
+@media screen and (max-width: 770px) {
+    div.MuiGrid-root.donateField {
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+}
+
+@media screen and (min-width: 771px) {
+    div.MuiGrid-root.donateField {
+        padding-left: 30%;
+        padding-right: 30%;
+    }
+}
+
+@media screen and (min-width: 1660px) {
+    div.MuiGrid-root.donateField {
+        padding-left: 40%;
+        padding-right: 40%;
+    }
+}

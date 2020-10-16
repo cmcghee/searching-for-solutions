@@ -31,57 +31,47 @@ class about extends Component {
         const { main1, main2 } = ABOUT_US_PARAGRAPHS;
 
         return(
-            <div className="aboutHeader vertical-offset" name="aboutus">
-                <h1>OUR MISSION</h1>
-                <p>{main1}</p>
-                <p>{main2}</p>
+            <div className="mainContentContainer">
+                <div className="aboutHeader vertical-offset" name="aboutus">
+                    <h1>OUR MISSION</h1>
+                    <p>{main1}</p>
+                    <p>{main2}</p>
+                </div>
+                <ResponsivePlayer />
             </div>
         );
     }
 
-    renderAboutUsVideo() {
-        return <ResponsivePlayer />
-
-    }
-
     renderMissionStatements() {
         const { theDream, standFor, ourCommunity } = MISSION_STATEMENTS;
-        const theDream1 = window.innerWidth >= 960 ? <div className="missionHeader" name="aboutus"><h1>THE DREAM</h1><p>{theDream}</p></div> : <div className="fill"><img src={stock2} alt="" className="img"/></div>
-        const theDream2 =  window.innerWidth >= 960 ? <div className="fill"><img src={stock2} alt="" className="img"/></div> : <div className="missionHeader " name="aboutus"><h1>THE DREAM</h1><p>{theDream}</p></div>
+        const theDream1 = window.innerWidth >= 960 ? <Grid item className="gridTextDream" xs={12} sm={12} md={6} lg={6} xl={6}><div className="missionHeader" name="aboutus"><h1>THE DREAM</h1><p>{theDream}</p></div></Grid> : <Grid item className="gridImg" xs={12} sm={12} md={6} lg={6} xl={6}><img src={stock2} alt="" className="img"/></Grid>
+        const theDream2 =  window.innerWidth >= 960 ? <Grid item className="gridImg" xs={12} sm={12} md={6} lg={6} xl={6}><img src={stock2} alt="" className="img"/></Grid> : <Grid item className="gridTextDrean" xs={12} sm={12} md={6} lg={6} xl={6}><div className="missionHeader" name="aboutus"><h1>THE DREAM</h1><p>{theDream}</p></div></Grid>
 
         return (
             <React.Fragment>
-                <Grid container spacing={0}>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <div className="fill vertical-offset">
-                            <img src={stock1} alt="" className="img"/>
-                        </div>
+                <Grid container className="vertical-offset noPadding" spacing={0}>
+                    <Grid item className="gridImg" xs={12} sm={12} md={6} lg={6} xl={6}>
+                        <img src={stock1} alt="" className="img"/>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                    <div className="missionHeader " name="aboutus">
-                        <h1>WHAT WE STAND FOR</h1>
+                    <Grid item className="gridText" xs={12} sm={12} md={6} lg={6} xl={6}>
+                        <div className="missionHeader greyBackground" name="aboutus">
+                            <h1>WHAT WE STAND FOR</h1>
                             <p>{standFor}</p>
                         </div>
                     </Grid>
                 </Grid>
-                <Grid container spacing={0}>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {theDream1}
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        {theDream2}
-                    </Grid>
+                <Grid container className="noPadding"spacing={0}>
+                    {theDream1}
+                    {theDream2}
                 </Grid>
-                <Grid container spacing={0}>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <div className="fill">
-                            <img src={stock3} alt="" className="img"/>
-                        </div>
+                <Grid container className="noPadding" spacing={0}>
+                    <Grid item className="gridImg" xs={12} sm={12} md={6} lg={6} xl={6}>
+                        <img src={stock3} alt="" className="img"/>
                     </Grid>
-                    <Grid item xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <div className="missionHeader " name="aboutus">
+                    <Grid item className="gridText" xs={12} sm={12} md={6} lg={6} xl={6}>
+                        <div className="missionHeader greyBackground" name="aboutus">
                             <h1>OUR COMMUNITY</h1>
-                                <p>{ourCommunity}</p>
+                            <p>{ourCommunity}</p>
                         </div>
                     </Grid>
                 </Grid>
@@ -93,7 +83,7 @@ class about extends Component {
         return(
             <div className="aboutHeader" name="ourteam">
                 <h1>OUR BOARD MEMBERS</h1>
-                <TeamMembers type="boardMembers" />
+                <h3>Announcing members on November 1, 2020</h3>
             </div>
         );
     }
@@ -101,7 +91,7 @@ class about extends Component {
     renderOurTeamExecHeader() {
 
         return(
-            <div className="aboutHeader">
+            <div className="aboutHeader vertical-offset">
                 <h1>OUR EXECUTIVE TEAM</h1>
                 <TeamMembers type="execMembers"/>
             </div>
@@ -110,7 +100,6 @@ class about extends Component {
 
     render() {
         const header = this.renderHeader();
-        const aboutUsVideo = this.renderAboutUsVideo();
         const missionStatements = this.renderMissionStatements();
         const ourTeamBoardHeader = this.renderOurTeamBoardHeader();
         const ourTeamExecHeader = this.renderOurTeamExecHeader();
@@ -118,10 +107,9 @@ class about extends Component {
         return (
             <React.Fragment>
                 {header}
-                {aboutUsVideo}
-                {ourTeamBoardHeader}
-                {ourTeamExecHeader}
                 {missionStatements}
+                {ourTeamExecHeader}
+                {ourTeamBoardHeader}
             </React.Fragment>
         );
     }

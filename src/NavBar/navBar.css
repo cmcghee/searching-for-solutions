@@ -23,4 +23,6 @@ button.MuiButton-root.leftSideButtons.menuButton {
     font-family: 'Comfortaa';
 }
 
-
+span.MuiButton-label {
+    color: #333
+}
